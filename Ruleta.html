@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
+<title>Ruleta de la Suerte CasaCupula</title>
+
+</head>
+<body>
+<div class="container-lg">
+<div class="btn-group-vertical d-grid gap-2"  >
+<svg width="500" height="400">
+  <!-- Definir un círculo base -->
+  <circle id="baseCircle" cx="250" cy="200" r="180" fill="none" stroke="black" stroke-width="2" />
+   
+  <!-- Definir los arcos para cada parte del círculo -->
+  <path id="part1" fill="url(#RedGradient)" />
+  <path id="part2" fill="url(#BlueGradient)" />
+  <path id="part3" fill="url(#GreenGradient)" />
+  <path id="part4" fill="url(#GoldGradient)" />
+  <path id="part5" fill="url(#GrayGradient)" />
+   <circle id="centerCircle" cx="250" cy="200" r="20" fill="url(#CenterGradient)" stroke="black" stroke-width="1"  />
+   <polygon points="215,5 250,40 280,5"  id="pointer" fill="url(#GoldGradient)" stroke="gray" stroke-width="3"/>
+    <defs>
+    <radialGradient id="CenterGradient">
+      <stop offset="0%" stop-color="mediumpurple" />
+      <stop offset="100%" stop-color="purple" />
+    </radialGradient>
+	<radialGradient id="GoldGradient">
+		<stop offset="0%" stop-color="lightyellow" />
+		<stop offset="100%" stop-color="yellow" />
+	</radialGradient>
+	<radialGradient id="GreenGradient">
+		<stop offset="0%" stop-color="lightgreen" />
+		<stop offset="100%" stop-color="green" />
+	</radialGradient>
+	<radialGradient id="RedGradient">
+		<stop offset="0%" stop-color="red" />
+		<stop offset="100%" stop-color="darkred" />
+	</radialGradient>
+	<radialGradient id="GrayGradient">
+		<stop offset="0%" stop-color="gray" />
+		<stop offset="100%" stop-color="darkgray" />
+	</radialGradient>
+	<radialGradient id="BlueGradient">
+		<stop offset="0%" stop-color="blue" />
+		<stop offset="100%" stop-color="darkblue" />
+	</radialGradient>
+  </defs>
+</svg>
+
+<button class="btn btn-dark  btn-lg" onclick="animarRotacion()">Start</button>
+</div>
+</div>
+<div class="btn-group-vertical d-grid gap-2"  aria-label="Basic mixed styles example">
+  <button type="button" class="btn btn-danger">36% Discount in super saver season</button>
+  <button type="button" class="btn btn-warning">Margarita Pitch at your arrival</button>
+  <button type="button" class="btn btn-success">Beer Bucket with Guac and Chips</button>
+  <button type="button" class="btn btn-primary">15% Couple Massage</button>
+  <button type="button" class="btn btn-secondary">100 pesos credit in BISTRO breakfast </button>
+</div>
+<script>
+// Función para calcular los puntos de inicio y fin de cada parte del círculo
+function calcularPuntos(x, y, radio, anguloInicio, anguloFin) {
+  const radianesInicio = (anguloInicio * Math.PI) / 180;
+  const radianesFin = (anguloFin * Math.PI) / 180;
+  
+  const puntoInicioX = x + radio * Math.cos(radianesInicio);
+  const puntoInicioY = y + radio * Math.sin(radianesInicio);
+  
+  const puntoFinX = x + radio * Math.cos(radianesFin);
+  const puntoFinY = y + radio * Math.sin(radianesFin);
+  
+  return [puntoInicioX, puntoInicioY, puntoFinX, puntoFinY];
+}
+
+// Función para dibujar cada parte del círculo
+function dibujarPartes() {
+  const svg = document.querySelector('svg');
+  const radio = 180;
+  const centroX = 250;
+  const centroY = 200;
+  const anguloInicio = -90; // Iniciar desde arriba del círculo
+  
+  const angulos = [0, 72, 144, 216, 288]; // Ángulos para las 5 partes
+  
+  angulos.forEach((angulo, indice) => {
+    const [inicioX, inicioY, finX, finY] = calcularPuntos(centroX, centroY, radio, anguloInicio + angulo, anguloInicio + angulo + 72);
+    
+    const path = document.getElementById(`part${indice + 1}`);
+    path.setAttribute('d', `M ${centroX} ${centroY} L ${inicioX} ${inicioY} A ${radio} ${radio} 0 0 1 ${finX} ${finY} Z`);
+  });
+}
+
+// Llamar a la función para dibujar las partes del círculo
+dibujarPartes();
+
+// Animar la rotación del círculo
+let rotation = 0;
+let speed = 0;
+let tiempo = 0;
+let done = false;
+function animarRotacion() {
+  rotation += 8; // Ajusta la velocidad de la rotación aquí
+  
+  document.getElementById('part1').setAttribute('transform', `rotate(${rotation}, 250, 200)`);
+   document.getElementById('part2').setAttribute('transform', `rotate(${rotation}, 250, 200)`);
+    document.getElementById('part3').setAttribute('transform', `rotate(${rotation}, 250, 200)`);
+	 document.getElementById('part4').setAttribute('transform', `rotate(${rotation}, 250, 200)`);
+	  document.getElementById('part5').setAttribute('transform', `rotate(${rotation}, 250, 200)`);
+	  tiempo= getRandomIntInclusive(3000,5500);
+	  if (rotation < tiempo) {
+	 speed= getRandomIntInclusive(1,9);
+	  rotation += speed;
+	  console.log(done);
+   
+	}
+	else if(rotation > tiempo){
+	speed= getRandomIntInclusive(1,3);
+	rotation += speed;
+	done=true
+
+	
+	console.log(done);
+	}
+	if (!done) {
+   window.requestAnimationFrame(animarRotacion);
+   }
+   else{
+   rotation = 0;
+    speed = 0;
+	done = false;
+   }
+  //requestAnimationFrame(animarRotacion);
+}
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+</script>
+
+</body>
+</html>
